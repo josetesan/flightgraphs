@@ -1,5 +1,6 @@
 package com.edreamsodigeo.travellingsalesman.model;
 
+
 import java.time.LocalDateTime;
 
 public interface Flight {
