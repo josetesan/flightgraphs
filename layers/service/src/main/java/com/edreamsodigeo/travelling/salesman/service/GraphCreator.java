@@ -2,7 +2,7 @@ package com.edreamsodigeo.travelling.salesman.service;
 
 import com.edreamsodigeo.travellingsalesman.model.Flight;
 import com.edreamsodigeo.travellingsalesman.model.FlightImplementation;
-import com.edreamsodigeo.travellingsalesman.model.Weight;
+import com.edreamsodigeo.travellingsalesman.model.FlightDetails;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
@@ -22,7 +22,7 @@ public class GraphCreator {
      */
     public static SimpleDirectedWeightedGraph from(List<Flight> flights) {
 
-        SimpleDirectedWeightedGraph<String,Weight> simpleDirectedWeightedGraph = new SimpleDirectedWeightedGraph<>(Weight.class);
+        SimpleDirectedWeightedGraph<String, FlightDetails> simpleDirectedWeightedGraph = new SimpleDirectedWeightedGraph<>(FlightDetails.class);
 
 
         for (Flight flight : flights) {
@@ -34,10 +34,9 @@ public class GraphCreator {
             if (!simpleDirectedWeightedGraph.containsVertex(flight.getDestination())) {
                 simpleDirectedWeightedGraph.addVertex(flight.getDestination());
             }
-
-            simpleDirectedWeightedGraph.addEdge(flight.getSource(),
-                                                flight.getDestination(),
-                                                new Weight(flight.getPrice(),flight.getDepartureTime(),flight.getArrivalTime()));
+            FlightDetails flightDetails = new FlightDetails(flight.getPrice(),flight.getDepartureTime(),flight.getArrivalTime());
+            simpleDirectedWeightedGraph.addEdge(flight.getSource(),flight.getDestination(),flightDetails);
+            simpleDirectedWeightedGraph.setEdgeWeight(flightDetails,flightDetails.getWeight());
 
         }
 
@@ -45,7 +44,7 @@ public class GraphCreator {
 
     }
 
-    public static List<Flight> toFlightList(GraphPath<String,Weight> path) {
+    public static List<Flight> toFlightList(GraphPath<String, FlightDetails> path) {
         List<Flight> flightList = new ArrayList<>(path.getEdgeList().size());
 
         // vertex size is always going to be edges_size + 1

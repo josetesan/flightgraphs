@@ -3,7 +3,7 @@ package com.edreamsodigeo.travelling.salesman.service;
 
 import com.edreamsodigeo.travellingsalesman.model.Flight;
 import com.edreamsodigeo.travellingsalesman.model.FlightImplementation;
-import com.edreamsodigeo.travellingsalesman.model.Weight;
+import com.edreamsodigeo.travellingsalesman.model.FlightDetails;
 import com.edreamsodigeo.travellingsalesman.store.FlightStore;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
@@ -59,7 +59,7 @@ public class RouteCalculatorTest {
                         new FlightImplementation("LON","NYC",500d,
                                 LocalDateTime.of(2022,1,13,16,0,0),
                                 LocalDateTime.of(2022,1,13,19,0,0)),
-                        new FlightImplementation("ORI","NYC",500d,
+                        new FlightImplementation("ORY","NYC",500d,
                                 LocalDateTime.of(2022,1,13,15,0,0),
                                 LocalDateTime.of(2022,1,13,18,0,0)
                         )
@@ -72,8 +72,8 @@ public class RouteCalculatorTest {
 
                 Assert.assertEquals( flights.size(),2);
                 Assert.assertEquals(flights.get(0).getSource(),"BCN");
-                Assert.assertEquals(flights.get(0).getDestination(),"ORI");
-                Assert.assertEquals(flights.get(1).getSource(),"ORI");
+                Assert.assertEquals(flights.get(0).getDestination(),"ORY");
+                Assert.assertEquals(flights.get(1).getSource(),"ORY");
                 Assert.assertEquals(flights.get(1).getDestination(),"NYC");
 
                 var totalPrice = flights.stream().map(Flight::getPrice).reduce(Double::sum);
@@ -145,7 +145,7 @@ public class RouteCalculatorTest {
         @Test
         public void testGraphs() {
 
-                SimpleDirectedWeightedGraph<String, Weight> simpleDirectedWeightedGraph = new SimpleDirectedWeightedGraph<String, Weight>(Weight.class);
+                SimpleDirectedWeightedGraph<String, FlightDetails> simpleDirectedWeightedGraph = new SimpleDirectedWeightedGraph<String, FlightDetails>(FlightDetails.class);
                 simpleDirectedWeightedGraph.addVertex("BCN");
                 simpleDirectedWeightedGraph.addVertex("MAD");
                 simpleDirectedWeightedGraph.addVertex("PAR");
@@ -158,18 +158,18 @@ public class RouteCalculatorTest {
                 simpleDirectedWeightedGraph.addVertex("NYC");
 
 
-                simpleDirectedWeightedGraph.addEdge("BCN","MAD",  new Weight(10d, LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
-                simpleDirectedWeightedGraph.addEdge("BCN","PAR",  new Weight(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
-                simpleDirectedWeightedGraph.addEdge("BCN","SVQ",  new Weight(10d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
-                simpleDirectedWeightedGraph.addEdge("PAR","LIS",  new Weight(10d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
-                simpleDirectedWeightedGraph.addEdge("PAR","MNL",  new Weight(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
-                simpleDirectedWeightedGraph.addEdge("MNL","HND",  new Weight(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
-                simpleDirectedWeightedGraph.addEdge("MAD","LON",  new Weight(10d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
-                simpleDirectedWeightedGraph.addEdge("WAW","NYC",  new Weight(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
-                simpleDirectedWeightedGraph.addEdge("SVQ","WAW",  new Weight(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
-                simpleDirectedWeightedGraph.addEdge("NYC","HND",  new Weight(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+                simpleDirectedWeightedGraph.addEdge("BCN","MAD",  new FlightDetails(10d, LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+                simpleDirectedWeightedGraph.addEdge("BCN","PAR",  new FlightDetails(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+                simpleDirectedWeightedGraph.addEdge("BCN","SVQ",  new FlightDetails(10d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+                simpleDirectedWeightedGraph.addEdge("PAR","LIS",  new FlightDetails(10d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+                simpleDirectedWeightedGraph.addEdge("PAR","MNL",  new FlightDetails(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+                simpleDirectedWeightedGraph.addEdge("MNL","HND",  new FlightDetails(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+                simpleDirectedWeightedGraph.addEdge("MAD","LON",  new FlightDetails(10d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+                simpleDirectedWeightedGraph.addEdge("WAW","NYC",  new FlightDetails(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+                simpleDirectedWeightedGraph.addEdge("SVQ","WAW",  new FlightDetails(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
+                simpleDirectedWeightedGraph.addEdge("NYC","HND",  new FlightDetails(50d,LocalDateTime.now(), LocalDateTime.now().plusHours(1)));
 
-                DijkstraShortestPath<String, Weight> dijkstraShortestPath = new DijkstraShortestPath<String, Weight>(simpleDirectedWeightedGraph);
+                DijkstraShortestPath<String, FlightDetails> dijkstraShortestPath = new DijkstraShortestPath<String, FlightDetails>(simpleDirectedWeightedGraph);
 
                 var path2 = dijkstraShortestPath.getPath("BCN", "HND");
 
@@ -177,8 +177,8 @@ public class RouteCalculatorTest {
 
                 cities2.forEach(System.out::println);
 
-                List<Weight> weights = path2.getEdgeList();
-                weights.forEach(System.out::println);
+                List<FlightDetails> flightDetails = path2.getEdgeList();
+                flightDetails.forEach(System.out::println);
 
                 var list = GraphCreator.toFlightList(path2);
                 list.forEach(System.out::println);
