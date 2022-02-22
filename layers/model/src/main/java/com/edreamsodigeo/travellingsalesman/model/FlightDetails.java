@@ -57,7 +57,7 @@ public class FlightDetails /* extends DefaultWeightedEdge implements Comparable<
 
     public Double getWeight() {
         return 10d * price +
-               1d *  ChronoUnit.SECONDS.between(departureTime, arrivalTime);
+               1d *  ChronoUnit.HOURS.between(departureTime, arrivalTime);
     }
 
 
